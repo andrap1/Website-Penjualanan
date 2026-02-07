@@ -1,0 +1,691 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplikasi Manajemen Penjualan</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        h1 {
+            color: #667eea;
+            font-size: 28px;
+        }
+
+        .header-info {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .info-box {
+            text-align: center;
+        }
+
+        .info-label {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .card h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 20px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        thead {
+            background: #f5f5f5;
+        }
+
+        th {
+            text-align: left;
+            padding: 12px;
+            color: #333;
+            font-weight: 600;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #f0f0f0;
+            color: #666;
+        }
+
+        tr:hover {
+            background: #f9f9f9;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-small {
+            padding: 8px 12px;
+            font-size: 12px;
+            width: auto;
+            border-radius: 4px;
+        }
+
+        .btn-delete {
+            background: #f5576c;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            text-align: center;
+            border-top: 4px solid #667eea;
+        }
+
+        .stat-card h3 {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-card.primary { border-top-color: #667eea; }
+        .stat-card.success { border-top-color: #10b981; }
+        .stat-card.warning { border-top-color: #f59e0b; }
+        .stat-card.danger { border-top-color: #f5576c; }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .message {
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .header-info {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            header {
+                flex-direction: column;
+                text-align: center;
+                gap: 20px;
+            }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📊 Manajemen Penjualan</h1>
+            <div class="header-info">
+                <div class="info-box">
+                    <div class="info-label">Total Uang Hari Ini</div>
+                    <div class="info-value" id="totalHariIni">Rp 0</div>
+                </div>
+                <div class="info-box">
+                    <div class="info-label">Jumlah Pcs Hari Ini</div>
+                    <div class="info-value" id="pcsHariIni">0</div>
+                </div>
+                <div class="info-box">
+                    <div class="info-label">Total Transaksi</div>
+                    <div class="info-value" id="jumlahTransaksi">0</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="filter-bar" style="margin-bottom:20px; display:flex; gap:10px; align-items:center;">
+            <div style="display:flex; gap:8px; align-items:center;">
+                <label style="font-weight:600; color:#fff;">Filter Tanggal:</label>
+                <input type="date" id="startDate">
+                <input type="date" id="endDate">
+                <button id="btnFilter" class="btn-small" style="width:auto;padding:8px 12px;" onclick="applyDateFilter()">Filter</button>
+                <button id="btnClearFilter" class="btn-small btn-danger" style="width:auto;padding:8px 12px;" onclick="clearFilter()">Clear</button>
+            </div>
+            <div style="margin-left:auto; display:flex; gap:8px;">
+                <button id="btnExport" class="btn-small" style="width:auto;padding:8px 12px;" onclick="exportCSV()">Backup CSV</button>
+                <button id="btnImport" class="btn-small" style="width:auto;padding:8px 12px;" onclick="document.getElementById('importFile').click()">Restore</button>
+                <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card primary">
+                <h3>Total Penjualan Keseluruhan</h3>
+                <div class="stat-value" id="statTotal">Rp 0</div>
+            </div>
+            <div class="stat-card success">
+                <h3>Total Produk Terjual</h3>
+                <div class="stat-value" id="statProduk">0 Unit</div>
+            </div>
+            <div class="stat-card warning">
+                <h3>Rata-rata per Transaksi</h3>
+                <div class="stat-value" id="statRataRata">Rp 0</div>
+            </div>
+            <div class="stat-card danger">
+                <h3>Jumlah Kategori</h3>
+                <div class="stat-value" id="statKategori">0</div>
+            </div>
+            <div class="stat-card primary">
+                <h3>Total Uang Hari Ini</h3>
+                <div class="stat-value" id="statUangHariIni">Rp 0</div>
+            </div>
+            <div class="stat-card success">
+                <h3>Jumlah Pcs Hari Ini</h3>
+                <div class="stat-value" id="statPcsHariIni">0 Pcs</div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="card">
+                <h2>➕ Input Penjualan</h2>
+                <div id="messageContainer"></div>
+                
+                <form id="formPenjualan">
+                    <div class="form-group">
+                        <label for="namaPemesan">Nama Pemesan</label>
+                        <input type="text" id="namaPemesan" required placeholder="Masukkan nama pemesan">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="kategori">Kategori</label>
+                        <select id="kategori" required onchange="updateHargaDisplay()">
+                            <option value="">-- Pilih Kategori --</option>
+                            <option value="Dimsum">Dimsum</option>
+                            <option value="Tahu Bakso">Tahu Bakso</option>
+                           <option value="Dimsum Mentai">Dimsum Mentai</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Harga per Pcs</label>
+                        <div style="padding: 12px; background: #f0f0f0; border-radius: 6px; font-size: 18px; font-weight: bold; color: #667eea;">
+                            Rp <span id="hargaDisplay">0</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="jumlah">Jumlah Pcs Terjual</label>
+                        <input type="number" id="jumlah" required placeholder="Masukkan jumlah pcs" min="1" value="1">
+                    </div>
+
+                    <button type="submit">💾 Simpan Penjualan</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h2>📈 Penjualan Terbaru</h2>
+                <div class="table-container">
+                    <table id="tableTransaksi">
+                        <thead>
+                            <tr>
+                                <th>Pemesan</th>
+                                <th>Kategori</th>
+                                <th>Pcs</th>
+                                <th>Total (Rp)</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <tr class="empty-state">
+                                <td colspan="5">Belum ada data penjualan</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="card full-width">
+            <h2>📋 Riwayat Lengkap Penjualan</h2>
+            <div style="overflow-x: auto;">
+                <table id="tableRiwayat">
+                    <thead>
+                        <tr>
+                            <th>Tanggal</th>
+                            <th>Pemesan</th>
+                            <th>Kategori</th>
+                            <th>Pcs</th>
+                            <th>Total (Rp)</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableRiwayatBody">
+                        <tr class="empty-state">
+                            <td colspan="6">Belum ada riwayat penjualan</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data storage
+        let penjualan = JSON.parse(localStorage.getItem('penjualan')) || [];
+        // Migrate old data key `namaProduk` -> `namaPemesan` if present
+        (function migrateOldKey() {
+            let migrated = false;
+            penjualan = penjualan.map(p => {
+                if (p && p.namaProduk && !p.namaPemesan) {
+                    p.namaPemesan = p.namaProduk;
+                    delete p.namaProduk;
+                    migrated = true;
+                }
+                return p;
+            });
+            if (migrated) localStorage.setItem('penjualan', JSON.stringify(penjualan));
+        })();
+
+        // Format currency
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                minimumFractionDigits: 0
+            }).format(amount);
+        }
+
+        // Format date
+        function formatDate(date) {
+            return new Intl.DateTimeFormat('id-ID', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            }).format(date);
+        }
+
+        // Show message
+        function showMessage(message, type = 'success') {
+            const container = document.getElementById('messageContainer');
+            container.innerHTML = `<div class="message ${type}">${message}</div>`;
+            setTimeout(() => {
+                container.innerHTML = '';
+            }, 3000);
+        }
+
+        // Mapping harga per kategori
+        const hargaKategori = {
+            'Dimsum': 2000,
+            'Tahu Bakso': 2500,
+            'Dimsum Mentai': 2500,
+        };
+
+        function updateHargaDisplay() {
+            const kategori = document.getElementById('kategori').value;
+            const harga = hargaKategori[kategori] || 0;
+            document.getElementById('hargaDisplay').textContent = harga.toLocaleString('id-ID');
+        }
+
+        // show initial harga when page loads
+        updateHargaDisplay();
+
+        // Handle form submission
+        document.getElementById('formPenjualan').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const kategori = document.getElementById('kategori').value;
+            const hargaJual = hargaKategori[kategori] || 0;
+            const jumlah = parseInt(document.getElementById('jumlah').value);
+            const totalJual = hargaJual * jumlah;
+
+            const data = {
+                id: Date.now(),
+                namaPemesan: document.getElementById('namaPemesan').value,
+                kategori: kategori,
+                harga: hargaJual,
+                jumlah: jumlah,
+                tanggal: new Date(),
+                total: totalJual
+            };
+
+            penjualan.push(data);
+            localStorage.setItem('penjualan', JSON.stringify(penjualan));
+
+            showMessage('✅ Penjualan berhasil disimpan!', 'success');
+            this.reset();
+            updateTables();
+            updateStats();
+        });
+
+        // Update tables
+        function getFilteredData() {
+            const startVal = document.getElementById('startDate').value;
+            const endVal = document.getElementById('endDate').value;
+            if (!startVal && !endVal) return penjualan;
+
+            let start = startVal ? new Date(startVal + 'T00:00:00') : new Date(-8640000000000000);
+            let end = endVal ? new Date(endVal + 'T23:59:59') : new Date(8640000000000000);
+
+            return penjualan.filter(p => {
+                const t = new Date(p.tanggal);
+                return t >= start && t <= end;
+            });
+        }
+
+        function updateTables() {
+            const tableBody = document.getElementById('tableBody');
+            const tableRiwayatBody = document.getElementById('tableRiwayatBody');
+            const viewData = getFilteredData();
+
+            // Recent transactions (last 5)
+            if (viewData.length === 0) {
+                tableBody.innerHTML = '<tr class="empty-state"><td colspan="5">Belum ada data penjualan</td></tr>';
+                tableRiwayatBody.innerHTML = '<tr class="empty-state"><td colspan="6">Belum ada riwayat penjualan</td></tr>';
+            } else {
+                const recent = viewData.slice(-5).reverse();
+                tableBody.innerHTML = recent.map(p => `
+                    <tr>
+                        <td><strong>${p.namaPemesan}</strong></td>
+                        <td>${p.kategori || '-'}</td>
+                        <td>${p.jumlah}</td>
+                        <td><strong>${formatCurrency(p.total)}</strong></td>
+                        <td><button class="btn-small btn-danger" onclick="deleteData(${p.id})">Hapus</button></td>
+                    </tr>
+                `).join('');
+
+                tableRiwayatBody.innerHTML = viewData.map((p) => `
+                    <tr>
+                        <td>${formatDate(new Date(p.tanggal))}</td>
+                        <td><strong>${p.namaPemesan}</strong></td>
+                        <td>${p.kategori || '-'}</td>
+                        <td>${p.jumlah}</td>
+                        <td><strong>${formatCurrency(p.total)}</strong></td>
+                        <td><button class="btn-small btn-danger" onclick="deleteData(${p.id})">Hapus</button></td>
+                    </tr>
+                `).reverse().join('');
+            }
+        }
+
+        // Delete data
+        function deleteData(id) {
+            if (confirm('Apakah Anda yakin ingin menghapus data ini?')) {
+                penjualan = penjualan.filter(p => p.id !== id);
+                localStorage.setItem('penjualan', JSON.stringify(penjualan));
+                showMessage('✅ Data berhasil dihapus!', 'success');
+                updateTables();
+                updateStats();
+            }
+        }
+
+        // Update statistics
+        function updateStats() {
+            // Use filtered view for stats so filter affects summary cards
+            const viewData = getFilteredData();
+            const totalPenjualan = viewData.reduce((sum, p) => sum + p.total, 0);
+            const totalProduk = viewData.reduce((sum, p) => sum + (p.jumlah || 0), 0);
+            const rataRata = viewData.length > 0 ? totalPenjualan / viewData.length : 0;
+
+            // Get unique categories from view
+            const kategoris = new Set(viewData.map(p => p.kategori).filter(Boolean));
+
+            document.getElementById('statTotal').textContent = formatCurrency(totalPenjualan);
+            document.getElementById('statProduk').textContent = totalProduk + ' Unit';
+            document.getElementById('statRataRata').textContent = formatCurrency(rataRata);
+            document.getElementById('statKategori').textContent = kategoris.size;
+
+            // Header: still show today's totals (from full data)
+            const today = new Date();
+            const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+            const todayData = penjualan.filter(p => new Date(p.tanggal) >= todayStart);
+            const todayTotal = todayData.reduce((sum, p) => sum + p.total, 0);
+            const todayPcs = todayData.reduce((sum, p) => sum + (p.jumlah || 0), 0);
+
+            document.getElementById('totalHariIni').textContent = formatCurrency(todayTotal);
+            document.getElementById('pcsHariIni').textContent = todayPcs;
+            document.getElementById('jumlahTransaksi').textContent = penjualan.length;
+
+            // Update stats cards untuk hari ini (mirror header)
+            document.getElementById('statUangHariIni').textContent = formatCurrency(todayTotal);
+            document.getElementById('statPcsHariIni').textContent = todayPcs + ' Pcs';
+        }
+
+        // Apply / clear filters
+        function applyDateFilter() {
+            updateTables();
+            updateStats();
+        }
+
+        function clearFilter() {
+            document.getElementById('startDate').value = '';
+            document.getElementById('endDate').value = '';
+            updateTables();
+            updateStats();
+        }
+
+        // Backup / Restore
+        function exportData() {
+            const dataStr = JSON.stringify(penjualan, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `penjualan_${new Date().toISOString().slice(0,10)}.json`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+        }
+
+        function exportCSV() {
+            if (!penjualan || penjualan.length === 0) {
+                alert('Tidak ada data untuk diekspor.');
+                return;
+            }
+            const rows = penjualan.map(p => {
+                const tanggal = new Date(p.tanggal).toISOString();
+                const nama = (p.namaPemesan || '').toString().replace(/"/g, '""');
+                const kategori = (p.kategori || '').toString().replace(/"/g, '""');
+                const pcs = p.jumlah || 0;
+                const total = p.total || 0;
+                return [tanggal, nama, kategori, pcs, total];
+            });
+
+            const header = ['Tanggal','Pemesan','Kategori','Pcs','Total'];
+            const csvContent = [header, ...rows]
+                .map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(','))
+                .join('\n');
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `penjualan_${new Date().toISOString().slice(0,10)}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+        }
+
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const imported = JSON.parse(e.target.result);
+                    if (!Array.isArray(imported)) throw new Error('Format tidak sesuai');
+                    if (confirm('Restore akan menggantikan data saat ini. Lanjutkan?')) {
+                        penjualan = imported.map(p => ({ ...p }));
+                        localStorage.setItem('penjualan', JSON.stringify(penjualan));
+                        showMessage('✅ Data berhasil di-restore!', 'success');
+                        updateTables();
+                        updateStats();
+                    }
+                } catch (err) {
+                    alert('Gagal mengimpor file: ' + err.message);
+                }
+            };
+            reader.readAsText(file);
+            event.target.value = '';
+        }
+
+        // Initialize
+        updateTables();
+        updateStats();
+    </script>
+</body>
+</html>
